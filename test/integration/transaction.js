@@ -1,12 +1,18 @@
 /*
-  Integration tests for the BITBOX. Only covers calls made to
+  Integration tests for the bitbox. Only covers calls made to
   rest.bitcoin.com.
 */
 
 const chai = require("chai")
 const assert = chai.assert
-const BITBOXSDK = require("../../src/BITBOX")
-const BITBOX = new BITBOXSDK()
+
+const BITBOX = require("../../lib/BITBOX").BITBOX
+let bitbox = new BITBOX()
+
+if (process.env.SERVER === "local")
+  bitbox = new BITBOX({ restURL: "http://localhost:3000/v2/" })
+if (process.env.SERVER === "stage")
+  bitbox = new BITBOX({ restURL: "https://rest.btctest.net/v2/" })
 
 // Inspect utility used for debugging.
 const util = require("util")
@@ -22,7 +28,7 @@ describe(`#Transaction`, () => {
       const txid =
         "fe28050b93faea61fa88c4c630f0e1f0a1c24d0082dd0e10d369e13212128f33"
 
-      const result = await BITBOX.Transaction.details(txid)
+      const result = await bitbox.Transaction.details(txid)
       //console.log(`result: ${JSON.stringify(result, null, 2)}`)
 
       assert.hasAllKeys(result, [
@@ -48,7 +54,7 @@ describe(`#Transaction`, () => {
         "fe28050b93faea61fa88c4c630f0e1f0a1c24d0082dd0e10d369e13212128f33"
       ]
 
-      const result = await BITBOX.Transaction.details(txids)
+      const result = await bitbox.Transaction.details(txids)
       //console.log(`result: ${JSON.stringify(result, null, 2)}`)
 
       assert.isArray(result)
@@ -58,7 +64,7 @@ describe(`#Transaction`, () => {
       try {
         const txid = 12345
 
-        await BITBOX.Transaction.details(txid)
+        await bitbox.Transaction.details(txid)
         assert.equal(true, false, "Unexpected result!")
       } catch (err) {
         //console.log(`err: `, err)
@@ -76,12 +82,12 @@ describe(`#Transaction`, () => {
         const data = []
         for (let i = 0; i < 25; i++) data.push(dataMock)
 
-        const result = await BITBOX.Transaction.details(data)
+        const result = await bitbox.Transaction.details(data)
 
         // console.log(`result: ${util.inspect(result)}`)
         assert.equal(false, false, "Unexpected result!")
       } catch (err) {
-        console.log(`err: ${util.inspect(err)}`)
+        // console.log(`err: ${util.inspect(err)}`)
 
         assert.hasAnyKeys(err, ["error"])
         assert.include(err.error, "Array too large")

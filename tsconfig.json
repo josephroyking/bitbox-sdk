@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "strict": true,
+    "target": "es5",
+    "downlevelIteration": true,
+    "moduleResolution": "node",
+    "lib": ["es2017"],
+    "sourceMap": true,
+    "esModuleInterop": true
+  },
+  "include": ["./lib", "./test", "./test/unit/**/*.ts"],
+  "files": ["index.ts"]
+}

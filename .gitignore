@@ -3,3 +3,16 @@ node_modules/*
 wallet-info.txt
 wallet.json
 
+package-lock.json
+# yarn-lock.json
+
+# production
+/dist
+index.js
+index.js.map
+lib/**/*.js
+lib/**/*.js.map
+test/**/*.js
+test/**/*.js.map
+
+coverage/
